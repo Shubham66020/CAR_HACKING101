@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Speed Boost Example</title>
+  <style>
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background-color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="800" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Car object with initial properties
+    let car = {
+      x: 50,
+      y: canvas.height / 2 - 25,
+      width: 50,
+      height: 25,
+      speed: 2,
+      boost: false
+    };
+
+    let boostDuration = 0;
+
+    // Draw the car
+    function drawCar() {
+      ctx.fillStyle = 'red';
+      ctx.fillRect(car.x, car.y, car.width, car.height);
+    }
+
+    // Update the car's position
+    function updateCar() {
+      car.x += car.speed;
+
+      // Handle boost activation
+      if (car.boost) {
+        car.speed = 5; // Increase speed
+        boostDuration++;
+
+        if (boostDuration > 100) { // Boost lasts for 100 frames
+          car.boost = false;
+          car.speed = 2; // Reset to normal speed
+          boostDuration = 0;
+        }
+      }
+
+      // Wrap the car around the canvas
+      if (car.x > canvas.width) {
+        car.x = -car.width;
+      }
+    }
+
+    // Handle key presses
+    document.addEventListener('keydown', function(event) {
+      if (event.code === 'Space') {
+        car.boost = true; // Activate boost when spacebar is pressed
+      }
+    });
+
+    // Game loop
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+      drawCar(); // Draw the car
+      updateCar(); // Update the car's position
+
+      requestAnimationFrame(gameLoop); // Keep the game running
+    }
+
+    // Start the game loop
+    gameLoop();
+  </script>
+</body>
+</html>
